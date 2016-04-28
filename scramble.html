@@ -1,3 +1,6 @@
+<!-- file:///home/user/src/js-word-scramble/scramble.html -->
+
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -7,8 +10,11 @@
     <h1>A Javascript Word Scramble Game</h1>
 
     <script>
-        var WORDS     = ["booger", "apple", "hackbright", "mango"];
-        var SCRAMBLED = ["oogreb", "papel", "backrhight", "goman"];
+        "use strict";
+
+        var WORDS     = ["booger", "apple", "hackbright", "mango", "pet", 
+                         "chicken", "mountain", "scramble"];
+        // var SCRAMBLED = ["oogreb", "papel", "backrhight", "goman"];
 
         var playing = true;
 
@@ -19,25 +25,43 @@
             var randomWord = WORDS[randomWordIndex];
 
             // Grab the corresponding scrambled word from the SCRAMBLED array
-            var scrambledWord = SCRAMBLED[randomWordIndex];
+            // var scrambledWord = SCRAMBLED[randomWordIndex];
+            // scramble random_word - do not reference scrambled list
 
-            // prompt the user to guess the original word when given the scrambled word
+            function scramble(randomWord) {
+                var splitWord = randomWord.split(""),
+                length = splitWord.length;
 
-            alert("Try if you can to unscramble this word: " + scrambledWord);
-            var userGuess = prompt("GUESS!").toLowerCase();
+                for(var i = length - 1; i > 0; i--) {
+                    var randomIndex = Math.floor(Math.random() * (i + 1));
+                    var tmp = splitWord[i];
+                    splitWord[i] = splitWord[randomIndex];
+                    splitWord[randomIndex] = tmp;
+                }
+                return splitWord.join("");
+            }
+
+            var scrambledWord = scramble(randomWord);
+
 
             // If the user guesses wrong, tell them they were wrong and the right word.
             // If the user guesses the correct word, congratulate them.
 
-            if (userGuess === randomWord) {
-                alert("You wonderful creature you, you got it right!")
-            } else {
-                alert("You are WRONG!");    
+            var guessAgain = true;
+            while (guessAgain && playing) {
+                // prompt the user to guess the original word when given the scrambled word
+                alert("Try if you can to unscramble this word: " + scrambledWord);
+                var userGuess = prompt("GUESS!").toLowerCase().trim();
+
+                if (userGuess === randomWord) {
+                    alert("You wonderful creature you, you got it right!");
+                    playing = confirm("Press OK To keep playing or Cancel to quit");
+                } else {
+                    alert("You are WRONG!");
+                    guessAgain = confirm("Would you like to try again?");
+                }
             }
             
-            
-
-            playing = confirm("Press OK To keep playing or Cancel to quit");
 
             // What does confirm() return?
             // What does setting the playing variable do?
